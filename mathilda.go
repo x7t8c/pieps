@@ -7,14 +7,30 @@ var NIDPathMap = map[NID]string{
 	NID(SingleNID(3)): "/dev/proc/main/cinp",
 }
 
-var VFileNIDMap = map[NID]VFile{
-	NID(SingleNID(0)): VFile{
+func BytesFromString(s string) []byte {
+	return []byte(s)
+}
+
+func FileNameFromBytes(b []byte) [128]byte {
+	d := [128]byte{}
+	for x := 0; x < len(b); x++ {
+		if x > 127 {
+			break
+		}
+		d[x] = b[x]
+	}
+	return d
+}
+
+var VFileNIDMap = map[NID]*VFile{
+	NID(SingleNID(0)): &VFile{
 		func(b []byte) (int, error) {
 			return len(b), nil
 		},
 		func(b []byte) error {
 			return nil
 		},
+		FileNameFromBytes(BytesFromString("/dev/nil")),
 	},
 }
 
